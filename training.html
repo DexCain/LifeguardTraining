@@ -22,7 +22,7 @@
                 </nav>
             </header>
 
-            <main>
+            <main class="game-container">
                 <div class="training-grid-container">
                     <div id="game-header">
                         <h3 id="game-instructions"></h3 >
@@ -57,6 +57,8 @@
                         <div class="supplies-attributes" id="supplies-patient">
                             <span class="event-action" id="cpr">CPR</span>
                             <span class="event-action" id="ar">AR</span>
+                            <span class="event-action" id="ar">Hands Off</span>
+                            <span class="event-action" id="ar">Stop Care</span>
                         </div>
                         <span class="event-action" id="survey" >Survey the Scene</span>
                         
@@ -79,6 +81,39 @@
                     </div>
                 </div>
             </main>
+
+            <aside class="game-setup">
+
+                <h3>Choose the mode</h3>
+                <label for="training-choice">Training Mode<span>No Help, No Hints</span></label>
+                <input name="training-learning" id="training-choice" type="radio" checked/>
+
+                <label for="training-hints-choice">Training Mode With Hints<span>Hints given for mistakes</span></label>
+                <input name="training-learning" id="training-hints-choice" type="radio"/>
+
+                <label for="learning-choice">Learning Mode<span>Hints given regardless</span></label>
+                <input name="training-learning" id="learning-choice" type="radio"/>
+
+                <h3>Choose the Training</h3>
+                
+                <label for="cpr-choice">CPR</label>
+                <input name="training-choice" id="cpr-choice" type="radio" checked/>
+
+                <label for="ar-choice">AR</label>
+                <input name="training-choice" id="ar-choice" type="radio"/>
+
+                <label for="cpr-ob-choice">CPR Obstructed</label>
+                <input name="training-choice" id="cpr-ob-choice" type="radio"/>
+
+                <label for="random-choice">Surprise Me</label>
+                <input name="training-choice" id="random-choice" type="radio"/>
+
+
+                <button>Start</button>
+            </aside>
+
+
+
             <img id="sealcursor" src="img/Seal-Easy-Cursor.svg">
         </div>
         <footer>
@@ -93,6 +128,9 @@
 
 
         <script type="text/javascript" src="cpr.js"></script>
+        <script>
+            startTraining();
+        </script>
     </div>
 </body>
 

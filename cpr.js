@@ -87,7 +87,9 @@ async function training1() {
     // START CPR
     await startCPR();
 
-    
+    await cprBreathsSuccessful();
+
+    await startCPR();
 
 
 
@@ -267,7 +269,7 @@ async function cprBreathsSuccessful() {
     }
 
 
-    document.body.style.cursor.display = "none";
+    document.body.style.cursor = "none";
 
     customCursor.style.display = "block";
 
@@ -303,7 +305,7 @@ async function cprBreathsSuccessful() {
         }
     }
 
-    document.body.style.cursor.display = "pointer";
+    document.body.style.cursor = "pointer";
 
     customCursor.style.display = "none";
 
