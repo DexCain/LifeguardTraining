@@ -1,0 +1,257 @@
+/* Main Body */
+body {
+    background-color: antiquewhite;
+    margin: 0;
+    padding: 0;
+
+    cursor: default;   
+}
+
+.container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100vh;
+}
+
+
+/* Nav Items */
+header {
+    background-color: #ee6b6e;
+    width: 100%;
+    border-bottom: 2px solid #c95a5c;
+
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0;
+    margin: auto;
+    width: 80%;
+}
+
+nav h1 {
+    font-size: 2em;
+    margin-block-start: 0em;
+    margin-block-end: 0em;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    margin-block-start: 0em;
+    margin-block-end: 0em;
+}
+
+nav ul li {
+    font-size: 1.4em;
+    padding: 1em;
+    transition: all .5s ease-out,
+                text-shadow .5s .1s ease-out,
+                margin 0s;
+}
+
+nav ul a {
+    text-decoration: none;
+    color: black;
+}
+
+nav ul li:hover {
+    background-color: #eb7e80;
+    /* border-right: 1px solid #6BEEEB; */
+    border-left: none;
+    border-bottom: 2px solid #6BEEEB;
+    margin: -2px;
+    color: #6BEEEB;
+    text-shadow: 1px 1px 2px black;
+}
+
+/* Main Content */
+main {
+    margin: 0 1em;
+    /* background-color: ; */
+    min-height: 100%;
+
+}
+
+
+main .about-head h1 {
+    padding: 0;
+    margin: 0;
+
+}
+
+main .about-head {
+    display: block;
+    max-width: fit-content;
+    margin: 3em auto;
+    border-bottom: 1px solid black;
+}
+
+.grid-container{
+    margin: 0 auto;
+    width: 80%;
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-column-gap: 4%;
+
+}
+
+.grid-container .box h2 {
+    display: block;
+    text-align: center;
+}
+
+.grid-container .note-box {
+    grid-column-start: 1;
+    grid-column-end: 3;
+
+    margin: auto;
+}
+
+.circle {
+    display: block;
+    margin: auto;
+    max-width: 5rem;
+    max-height: 5rem;
+    border-radius: 50%;
+}
+
+/* Footer */
+
+footer {
+    margin-top: auto;
+    padding: 2em 0;
+    background-color: #ee6b6d4b;
+}
+
+footer h6 {
+    display: block;
+    margin: auto;
+    max-width: fit-content;
+    
+}
+
+/* Training Main Page */
+
+.training-grid-container {
+    margin: 0 auto;
+    width: 80%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-column-gap: 4%;
+    grid-template-areas: 
+                "supplies header ."
+                "supplies img info"
+                "supplies img .";
+}
+
+#game-header {
+    grid-area: header;
+    text-align: center;
+}
+
+#supplies {
+    grid-area: supplies;
+}
+
+ #supplies /*,
+#actions */ { 
+    background-color: #ee6b6d4b;
+    padding: 1em;
+    border-radius: 1em;
+    border: 1px solid black;
+    margin: auto;
+    display:flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+#supplies h3 /*,
+#actions h3 */{
+    text-align: center;
+    margin-top: .1em;
+    margin-bottom: .4em;
+
+}
+
+#supplies span,
+.supplies-attributes span {
+    padding: .3em;
+    margin: .3em 0;
+    border-radius: 1em;
+    min-width: 4em;
+    border:  1px solid #6BEEEB;
+    background-color: #6beeec56;
+    text-align: center;
+    transition: all .5s;
+}
+
+#supplies span:hover,
+.supplies-attributes span:hover {
+    border: 1px solid black;
+    background-color:#6BEEEB;
+}
+
+/* #actions {
+    grid-area: actions;
+} */
+
+#game-img {
+    grid-area: img;
+
+}
+
+#game-info {
+    grid-area: info;
+}
+
+
+
+/* Special Cursor */
+
+#sealcursor {
+    background-image: url('img/Seal-Easy-Cursor.svg');
+    position: fixed;
+    height: 30px;
+    width: 30px;
+    z-index: 2;
+    border-radius: 50%;
+
+    display: none;
+}
+
+
+/* Actions styles */
+
+/* #supplies-whistle,
+#supplies-gloves,
+#supplies-sealeasy{
+    display: none;  
+} */
+
+.supplies-attributes { 
+    margin-left: auto;
+    padding-left: 5%;
+    display:flex;
+    flex-direction: column;
+    width: 90%;
+    border-left: 1px solid rgb(129, 124, 124);
+    display: none;
+}
+
+
+
+
+/* Warning */
+
+ #game-warning {
+    display: none;
+    margin: auto;
+    padding: 1px 3px;
+    color: rgb(255, 255, 255);
+    background-color: rgb(255, 80, 61);
+} 

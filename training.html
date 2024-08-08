@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="style.css">
+    
+</head>
+
+<body>
+    <div class="container">
+        <div class="above-foot">
+            <header>
+                <nav>
+                    <h1 class="banner">
+                        Lifeguard Training Game
+                    </h1>
+                    
+
+                    <ul class="nav-container">
+                        <a href="index.html"><li class="nav-item">About</li></a>
+                        <a href="#"><li class="nav-item">Training</li></a>
+                    </ul>
+                </nav>
+            </header>
+
+            <main>
+                <div class="training-grid-container">
+                    <div id="game-header">
+                        <h3 id="game-instructions"></h3 >
+                    </div>
+                    <div id="supplies">
+                        <h3>Actions</h3>
+                        <text id="game-warning">asd</text>
+                        <span class="add-drop">Whistle</span>
+                        <div class="supplies-attributes" id="supplies-whistle">
+                            <span class="event-action" id="short-1">1 Short</span>
+                            <span class="event-action" id="short-2">2 Short</span>
+                            <span class="event-action" id="short-3">3 Short</span>
+                            <span class="event-action" id="long-1">1 Long</span>
+                            <span class="event-action" id="long-2">2 Long</span>
+                        </div>
+                        <span class="add-drop">Gloves</span>
+                        <div class="supplies-attributes" id="supplies-gloves">
+                            <span class="event-action" id="gloves">Put On Gloves</span>
+                        </div>
+                        <span class="add-drop">Seal-Easy</span>
+                        <div class="supplies-attributes" id="supplies-sealeasy">
+                            <span class="event-action" id="sealeasy">Place Seal-Easy</span>
+                        </div>
+                        <span class="add-drop">Analyze the Patient</span>
+                        <div class="supplies-attributes" id="supplies-analysis">
+                            <span class="event-action" id="carotid">Check the Carotid Artery</span>
+                            <span class="event-action" id="brachial">Check the Brachial Artery</span>
+                            <span class="event-action" id="consciousness">Check for Consciousness</span>
+
+
+                        </div>
+                        <span class="add-drop">Patient Care</span>
+                        <div class="supplies-attributes" id="supplies-patient">
+                            <span class="event-action" id="cpr">Begin CPR</span>
+                            <span class="event-action" id="ar">Begin AR</span>
+                        </div>
+                        <span class="event-action" id="survey" >Survey the Scene</span>
+                        
+                    </div>
+                
+                    <img id="game-img" src="img/try1.png">
+
+                    <div id="game-info">
+
+                        <div id="timer">
+
+                        </div>
+
+                        <div id="score-container">
+                            Status: <span id="score-val">0</span>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            <img id="sealcursor" src="img/Seal-Easy-Cursor.svg">
+        </div>
+        <footer>
+
+
+            <h6>&copy; Declan Cain | All Rights Reserved</h6>
+
+
+
+        </footer>
+
+
+
+        <script type="text/javascript" src="cpr.js"></script>
+    </div>
+</body>
+
+</html>
