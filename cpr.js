@@ -3,6 +3,7 @@ const scoreCard = document.getElementById('score-val');
 const image = document.getElementById('game-img');
 const header = document.getElementById('game-instructions');
 const gameWarning = document.getElementById('game-warning');
+const customCursor = document.getElementById('sealcursor');
 
 const sealEasyActionDiv = document.getElementById('seal-actions');
 
@@ -82,10 +83,8 @@ async function training1() {
     await checkThePatient();
 
     await checkTheCaroArtery("cpr");
+    
     // START CPR
-
-    
-    
     await startCPR();
 
     
@@ -240,29 +239,75 @@ async function startCPR() {
             scoreCard.innerHTML = "Perfect" + avg;
         }
     }
-
+    // CPR is done, so no need to show CPR data anymore
     scoreCard.innerHTML = "";
 
+    // Done with CPR, time to move on to CPR Breaths (however there are different possibilities so that is handled in the specific training function)
     header.innerHTML = "30 Compressions Done";
 
 }
 
-async function cprBreaths() {
-
+async function cprBreathsSuccessful() {
     var event = true;
 
     while(true){
         event = await waitForEvent(window, 'click');
-        if(event.target == image){
+        if(event.target.classList.contains('event-action')){
+            // They chose the right action
+            if(event.target.id === 'sealeasy'){
                 gameWarning.style.display = 'none';
                 break;
                 
             }
             else {
-                gameWarning.innerHTML ='HINT: They are not alive';
+                gameWarning.innerHTML ='HINT: What do we do after 30 compressions for CPR';
                 gameWarning.style.display = 'block';
             }
+        }
     }
+
+
+    document.body.style.cursor.display = "none";
+
+    customCursor.style.display = "block";
+
+    header.innerHTML = "Give a Breath by tapping the patient";
+
+
+
+    while(true){
+        event = await waitForEvent(window, 'click');
+        if(event.target == image){
+            gameWarning.style.display = 'none';
+            break;
+            
+        }
+        else {
+            gameWarning.innerHTML ='HINT: Place the mask on the individual';
+            gameWarning.style.display = 'block';
+        }
+    }
+
+    header.innerHTML = "First Breath Goes In";
+
+    while(true){
+        event = await waitForEvent(window, 'click');
+        if(event.target == image){
+            gameWarning.style.display = 'none';
+            break;
+            
+        }
+        else {
+            gameWarning.innerHTML ='HINT: Place the mask on the individual';
+            gameWarning.style.display = 'block';
+        }
+    }
+
+    document.body.style.cursor.display = "pointer";
+
+    customCursor.style.display = "none";
+
+    header.innerHTML = "Second Breath Goes In...";
 
 }
 
@@ -343,7 +388,6 @@ function resetDropdowns(){
     patient.style.display = "none";
 }
 
-const customCursor = document.getElementById('sealcursor');
 
 const updateCursorPosition = (event) => {
   customCursor.style.top = `${event.clientY}px`;

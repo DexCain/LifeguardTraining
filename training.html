@@ -29,7 +29,6 @@
                     </div>
                     <div id="supplies">
                         <h3>Actions</h3>
-                        <text id="game-warning">asd</text>
                         <span class="add-drop">Whistle</span>
                         <div class="supplies-attributes" id="supplies-whistle">
                             <span class="event-action" id="short-1">1 Short</span>
@@ -56,8 +55,8 @@
                         </div>
                         <span class="add-drop">Patient Care</span>
                         <div class="supplies-attributes" id="supplies-patient">
-                            <span class="event-action" id="cpr">Begin CPR</span>
-                            <span class="event-action" id="ar">Begin AR</span>
+                            <span class="event-action" id="cpr">CPR</span>
+                            <span class="event-action" id="ar">AR</span>
                         </div>
                         <span class="event-action" id="survey" >Survey the Scene</span>
                         
@@ -72,7 +71,10 @@
                         </div>
 
                         <div id="score-container">
-                            Status: <span id="score-val">0</span>
+                            Score: <span id="score-val">0</span>
+                            <text id="game-warning"></text>
+
+                            <span id="cpr-quality"></span>
                         </div>
                     </div>
                 </div>
