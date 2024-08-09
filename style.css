@@ -144,9 +144,9 @@ footer h6 {
     grid-template-columns: 1fr 1fr 1fr;
     grid-column-gap: 4%;
     grid-template-areas: 
-                "supplies header ."
+                ". header ."
                 "supplies img info"
-                "supplies img .";
+                "supplies img info";
 }
 
 #game-header {
@@ -156,19 +156,23 @@ footer h6 {
 
 #supplies {
     grid-area: supplies;
-}
-
- #supplies /*,
-#actions */ { 
     background-color: #ee6b6d4b;
-    padding: 1em;
-    border-radius: 1em;
     border: 1px solid black;
     margin: auto;
+
+}
+
+ #supplies,
+ #score-container { 
+    padding: 1em;
+    border-radius: 1em;
     display:flex;
     flex-direction: column;
     width: 100%;
 }
+
+
+
 
 #supplies h3 /*,
 #actions h3 */{
@@ -205,7 +209,7 @@ footer h6 {
 
 }
 
-#game-info {
+#score-container {
     grid-area: info;
 }
 
@@ -249,7 +253,6 @@ footer h6 {
 /* Warning */
 
  #game-warning {
-    display: none;
     margin: auto;
     padding: 1px 3px;
     color: rgb(255, 255, 255);
@@ -338,4 +341,29 @@ footer h6 {
 .game-setup button:hover {
     background-color: #6BEEEB;
 
+}
+
+
+
+/* Score and Info divs */
+
+#score-container {
+    margin: auto;
+}
+
+
+#score-container > * {
+    margin: .2em auto;
+    padding: .2em .5em;
+    text-align: center;
+}
+
+#score-val-container {
+    font-size: 1.4em;
+    font-weight:bold;
+}
+
+#hint-val-container{
+    background-color: #ee6b6d4b;
+    border-radius:  10px;
 }

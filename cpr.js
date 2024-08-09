@@ -9,6 +9,8 @@ const gameContainer = document.getElementsByClassName('game-container')[0];
 const sealEasyActionDiv = document.getElementById('seal-actions');
 
 var lastClick = -2;
+let gameHintState;
+let gameErrorState;
 let lastTimes;
 let avg;
 let count;
@@ -40,22 +42,35 @@ async function waitForValue(obj, targetValue) {
 }
 
 
-async function waitForCorrectButton(targetId, errorMessage) {
+async function waitForCorrectButton(targetId, hintMessage, errorMessage) {
     var possiblePoints = 3;
     // Doing the analysis
     var event = null;
+
+    // Display the Hint if we are in Hint state
+    if(gameHintState){
+        hint.innerHTML = hintMessage;
+    }
+
     while(true){
         event = await waitForEvent(window, 'click');
         if(event.target.classList.contains('event-action')){
             // They chose the right action
             if(event.target.id === targetId){
-                gameWarning.style.display = 'none';
+                gameWarning.innerHTML = "";
+                hint.innerHTML = "";
                 gamePoints += possiblePoints > 0 ? possiblePoints : 0; 
                 break;
             }
             else {
-                gameWarning.innerHTML = errorMessage;
-                gameWarning.style.display = 'block';
+                // Display the Error if we are in the error state
+                if(gameErrorState){
+                    gameWarning.innerHTML = errorMessage;
+                }
+                else{
+                    gameWarning.innerHTML = "Wrong Choice!";
+                }
+
                 possiblePoints -= 1;
             }
         }
@@ -107,11 +122,11 @@ async function checkTheScene() {
     // Doing the analysis
     var event = null;
 
-    await waitForCorrectButton('survey', 'HINT: You stepped on glass...');
+    await waitForCorrectButton('survey', 'We need to check for Gas, Glass, Fire, Wire, and Ew' ,'You stepped on glass...');
 
     header.innerHTML = "Scene is safe, but what is missing...";
 
-    await waitForCorrectButton('gloves', 'Do you want bodily fluids on your hands?');
+    await waitForCorrectButton('gloves', 'While surveying the scene you need one important piece of PPE (Personal Protective Equipment)' ,'Do you want bodily fluids on your hands?');
 
     header.innerHTML = "You Are Now Safe to Continue";
 
@@ -121,11 +136,11 @@ async function checkTheScene() {
 async function checkThePatient() {
     var event = null;
 
-    await waitForCorrectButton('consciousness', 'HINT: What if they were sleeping...');
+    await waitForCorrectButton('consciousness', 'Is our patient sleeping or completly unconcious?' ,'What if they were sleeping...');
 
     header.innerHTML = "Patient Doesn't Respond";
 
-    await waitForCorrectButton('long-2', 'HINT: Should Anyone Be Unconcious');
+    await waitForCorrectButton('long-2', 'We need to alert others we need help!!!' ,'Should Anyone Be Unconcious');
 
     header.innerHTML = "First Responders are on their way"
 
@@ -134,7 +149,7 @@ async function checkThePatient() {
 async function checkTheCaroArtery(cond) {
     var event = null;
 
-    await waitForCorrectButton('carotid', 'HINT: What are their vitals?');
+    await waitForCorrectButton('carotid', 'Is the adult alive or dead?' , 'What are their vitals?');
 
     if (cond === "cpr"){
         header.innerHTML = "You Don't Feel a Thumping or a Breath";
@@ -151,7 +166,7 @@ async function startCPR(ems) {
         emsArrivesDuringCpr();
     }
 
-    await waitForCorrectButton('cpr', 'HINT: They are not alive');
+    await waitForCorrectButton('cpr', 'They have no pulse what do we need to do or continue to do' ,'They are not alive');
 
 
 
@@ -183,7 +198,7 @@ async function startCPR(ems) {
 async function cprBreathsSuccessful(foam) {
     var event = true;
 
-    await waitForCorrectButton('sealeasy', 'HINT: What do we do after 30 compressions for CPR');
+    await waitForCorrectButton('sealeasy', 'We completed our 30 compressions, what is next?', 'What do we do after 30 compressions for CPR');
 
 
     document.body.style.cursor = "none";
@@ -193,16 +208,19 @@ async function cprBreathsSuccessful(foam) {
     header.innerHTML = "Give a Breath by tapping the patient";
 
 
-
+    if(gameHintState){
+        hint.innerHTML = "Place the mask on the GID"
+    }
     while(true){
         event = await waitForEvent(window, 'click');
         if(event.target == image){
             gameWarning.style.display = 'none';
             break;
-            
         }
         else {
-            gameWarning.innerHTML ='HINT: Place the mask on the individual';
+            if(gameErrorState){
+                gameWarning.innerHTML ='Place the mask on the individual';
+            }
             gameWarning.style.display = 'block';
         }
     }
@@ -212,10 +230,14 @@ async function cprBreathsSuccessful(foam) {
 
     if(foam){
         breathMsg += " And Foam is Coming From the Mouth";
+        if(gameHintState){
+            hint.innerHTML = "Can't we just breathe through foam?"
+        }
     }
 
     header.innerHTML = breathMsg;
 
+    
     while(true){
         event = await waitForEvent(window, 'click');
         if(event.target == image){
@@ -224,7 +246,9 @@ async function cprBreathsSuccessful(foam) {
             
         }
         else {
-            gameWarning.innerHTML ='HINT: Can we breath through foam?';
+            if(gameErrorState){
+                gameWarning.innerHTML ='Can we breath through foam?';
+            }
             gameWarning.style.display = 'block';
         }
     }
@@ -245,7 +269,7 @@ async function emsArrivesDuringCpr() {
 
         header.innerHTML = "EMS has arrived and taken over"
         
-        await waitForCorrectButton('hands-off', 'HINT: You are done :)');
+        await waitForCorrectButton('hands-off','The professionals have arrived and we are done, what do we do?' , 'You are done :)');
 
         header.innerHTML = "Well Done! Training Over!"
 
@@ -399,16 +423,17 @@ const startButton = document.getElementById("start-game");
 startButton.addEventListener("click", () => {
 
     if(trainButton.classList.contains("selected-div")){
-        gameWarning.display = "none";
-        hint.display = "none";
+        gameHintState = false;
+        gameErrorState = false;
+
     }
     else if(learnButton.classList.contains("selected-div")){
-        gameWarning.display = "none";
-        hint.display = "block";
+        gameHintState = true;
+        gameErrorState = false;
     }
     else {
-        gameWarning.display = "block";
-        hint.display = "none";
+        gameHintState = false;
+        gameErrorState = true;
     }
 
     if(cprTraining.classList.contains("selected-div")){
