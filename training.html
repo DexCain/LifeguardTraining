@@ -22,7 +22,7 @@
                 </nav>
             </header>
 
-            <main class="game-container">
+            <main class="game-container" style="display: none;">
                 <div class="training-grid-container">
                     <div id="game-header">
                         <h3 id="game-instructions"></h3 >
@@ -57,7 +57,8 @@
                         <div class="supplies-attributes" id="supplies-patient">
                             <span class="event-action" id="cpr">CPR</span>
                             <span class="event-action" id="ar">AR</span>
-                            <span class="event-action" id="ar">Hands Off</span>
+                            <span class="event-action" id="recover">Recover Position</span>
+                            <span class="event-action" id="hands-off">Hands Off</span>
                             <span class="event-action" id="ar">Stop Care</span>
                         </div>
                         <span class="event-action" id="survey" >Survey the Scene</span>
@@ -75,6 +76,7 @@
                         <div id="score-container">
                             Score: <span id="score-val">0</span>
                             <text id="game-warning"></text>
+                            <text id="hint"></text>
 
                             <span id="cpr-quality"></span>
                         </div>
@@ -120,7 +122,7 @@
                     </div>
                 </div>
 
-                <button><strong>Start</strong></button>
+                <button id="start-game"><strong>Start</strong></button>
             </aside>
 
 

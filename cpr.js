@@ -4,7 +4,8 @@ const image = document.getElementById('game-img');
 const header = document.getElementById('game-instructions');
 const gameWarning = document.getElementById('game-warning');
 const customCursor = document.getElementById('sealcursor');
-
+const hint = document.getElementById('hint');
+const gameContainer = document.getElementsByClassName('game-container')[0];
 const sealEasyActionDiv = document.getElementById('seal-actions');
 
 var lastClick = -2;
@@ -12,7 +13,7 @@ let lastTimes;
 let avg;
 let count;
 
-var gamePoints;
+var gamePoints = 0;
 
 
 // Event Listener function
@@ -49,7 +50,7 @@ async function waitForCorrectButton(targetId, errorMessage) {
             // They chose the right action
             if(event.target.id === targetId){
                 gameWarning.style.display = 'none';
-                points += possiblePoints > 0 ? possiblePoints : 0; 
+                gamePoints += possiblePoints > 0 ? possiblePoints : 0; 
                 break;
             }
             else {
@@ -59,6 +60,8 @@ async function waitForCorrectButton(targetId, errorMessage) {
             }
         }
     }
+    scoreCard.innerHTML = gamePoints;
+
 
 }
 
@@ -85,11 +88,18 @@ async function training1() {
     await checkTheCaroArtery("cpr");
     
     // START CPR
-    await startCPR();
+    await startCPR(false);
 
-    await cprBreathsSuccessful();
+    await cprBreathsSuccessful(false);
 
-    await startCPR();
+    await startCPR(false);
+
+    await cprBreathsSuccessful(true);
+
+
+    await startCPR(true);
+
+
 
 
 
@@ -100,39 +110,12 @@ async function checkTheScene() {
     var possiblePoints = 3;
     // Doing the analysis
     var event = null;
-    while(true){
-        event = await waitForEvent(window, 'click');
-        if(event.target.classList.contains('event-action')){
-            // They chose the right action
-            if(event.target.id === 'survey'){
-                gameWarning.style.display = 'none';
-                points += possiblePoints > 0 ? possiblePoints : 0; 
-                break;
-            }
-            else {
-                gameWarning.innerHTML ='HINT: You stepped on glass...';
-                gameWarning.style.display = 'block';
-                possiblePoints -= 1;
-            }
-        }
-    }
+
+    await waitForCorrectButton('survey', 'HINT: You stepped on glass...');
 
     header.innerHTML = "Scene is safe, but what is missing...";
 
-    while(true){
-        event = await waitForEvent(window, 'click');
-        if(event.target.classList.contains('event-action')){
-            // They chose the right action
-            if(event.target.id === 'gloves'){
-                gameWarning.style.display = 'none';
-                break;
-            }
-            else {
-                gameWarning.innerHTML ='HINT: You stepped on glass...';
-                gameWarning.style.display = 'block';
-            }
-        }
-    }
+    await waitForCorrectButton('gloves', 'Do you want bodily fluids on your hands?');
 
     header.innerHTML = "You Are Now Safe to Continue";
 
@@ -142,38 +125,41 @@ async function checkTheScene() {
 async function checkThePatient() {
     var event = null;
 
-    // Waitin
-    while(true){
-        event = await waitForEvent(window, 'click');
-        if(event.target.classList.contains('event-action')){
-            // They chose the right action
-            if(event.target.id === 'consciousness'){
-                gameWarning.style.display = 'none';
-                break;
-            }
-            else {
-                gameWarning.innerHTML ='HINT: What if they were sleeping...';
-                gameWarning.style.display = 'block';
-            }
-        }
-    }
+    await waitForCorrectButton('consciousness', 'HINT: What if they were sleeping...');
+
+    // while(true){
+    //     event = await waitForEvent(window, 'click');
+    //     if(event.target.classList.contains('event-action')){
+    //         // They chose the right action
+    //         if(event.target.id === 'consciousness'){
+    //             gameWarning.style.display = 'none';
+    //             break;
+    //         }
+    //         else {
+    //             gameWarning.innerHTML ='HINT: What if they were sleeping...';
+    //             gameWarning.style.display = 'block';
+    //         }
+    //     }
+    // }
 
     header.innerHTML = "Patient Doesn't Respond";
 
-    while(true){
-        event = await waitForEvent(window, 'click');
-        if(event.target.classList.contains('event-action')){
-            // They chose the right action
-            if(event.target.id === 'long-2'){
-                gameWarning.style.display = 'none';
-                break;
-            }
-            else {
-                gameWarning.innerHTML ='HINT: Should Anyone Be Unconcious';
-                gameWarning.style.display = 'block';
-            }
-        }
-    }
+    await waitForCorrectButton('long-2', 'HINT: Should Anyone Be Unconcious');
+
+    // while(true){
+    //     event = await waitForEvent(window, 'click');
+    //     if(event.target.classList.contains('event-action')){
+    //         // They chose the right action
+    //         if(event.target.id === 'long-2'){
+    //             gameWarning.style.display = 'none';
+    //             break;
+    //         }
+    //         else {
+    //             gameWarning.innerHTML ='HINT: Should Anyone Be Unconcious';
+    //             gameWarning.style.display = 'block';
+    //         }
+    //     }
+    // }
 
     header.innerHTML = "First Responders are on their way"
 
@@ -182,22 +168,22 @@ async function checkThePatient() {
 async function checkTheCaroArtery(cond) {
     var event = null;
 
-    // Waitin
-    while(true){
-        event = await waitForEvent(window, 'click');
-        if(event.target.classList.contains('event-action')){
-            // They chose the right action
-            if(event.target.id === 'carotid'){
-                gameWarning.style.display = 'none';
-                break;
+    await waitForCorrectButton('carotid', 'HINT: What are their vitals?');
+    // while(true){
+    //     event = await waitForEvent(window, 'click');
+    //     if(event.target.classList.contains('event-action')){
+    //         // They chose the right action
+    //         if(event.target.id === 'carotid'){
+    //             gameWarning.style.display = 'none';
+    //             break;
                 
-            }
-            else {
-                gameWarning.innerHTML ='HINT: What are their vitals?';
-                gameWarning.style.display = 'block';
-            }
-        }
-    }
+    //         }
+    //         else {
+    //             gameWarning.innerHTML ='HINT: What are their vitals?';
+    //             gameWarning.style.display = 'block';
+    //         }
+    //     }
+    // }
     if (cond === "cpr"){
         header.innerHTML = "You Don't Feel a Thumping or a Breath";
     }
@@ -205,24 +191,31 @@ async function checkTheCaroArtery(cond) {
 }
 
 
-async function startCPR() {
+async function startCPR(ems) {
     var event = null;
 
-    while(true){
-        event = await waitForEvent(window, 'click');
-        if(event.target.classList.contains('event-action')){
-            // They chose the right action
-            if(event.target.id === 'cpr'){
-                gameWarning.style.display = 'none';
-                break;
-                
-            }
-            else {
-                gameWarning.innerHTML ='HINT: They are not alive';
-                gameWarning.style.display = 'block';
-            }
-        }
+
+    if(ems){
+        emsArrivesDuringCpr();
     }
+
+    await waitForCorrectButton('cpr', 'HINT: They are not alive');
+
+    // while(true){
+    //     event = await waitForEvent(window, 'click');
+    //     if(event.target.classList.contains('event-action')){
+    //         // They chose the right action
+    //         if(event.target.id === 'cpr'){
+    //             gameWarning.style.display = 'none';
+    //             break;
+                
+    //         }
+    //         else {
+    //             gameWarning.innerHTML ='HINT: They are not alive';
+    //             gameWarning.style.display = 'block';
+    //         }
+    //     }
+    // }
 
 
 
@@ -245,28 +238,16 @@ async function startCPR() {
     scoreCard.innerHTML = "";
 
     // Done with CPR, time to move on to CPR Breaths (however there are different possibilities so that is handled in the specific training function)
-    header.innerHTML = "30 Compressions Done";
+    if(!ems){
+        header.innerHTML = "30 Compressions Done";
+    }  
 
 }
 
-async function cprBreathsSuccessful() {
+async function cprBreathsSuccessful(foam) {
     var event = true;
 
-    while(true){
-        event = await waitForEvent(window, 'click');
-        if(event.target.classList.contains('event-action')){
-            // They chose the right action
-            if(event.target.id === 'sealeasy'){
-                gameWarning.style.display = 'none';
-                break;
-                
-            }
-            else {
-                gameWarning.innerHTML ='HINT: What do we do after 30 compressions for CPR';
-                gameWarning.style.display = 'block';
-            }
-        }
-    }
+    await waitForCorrectButton('sealeasy', 'HINT: What do we do after 30 compressions for CPR');
 
 
     document.body.style.cursor = "none";
@@ -290,7 +271,14 @@ async function cprBreathsSuccessful() {
         }
     }
 
-    header.innerHTML = "First Breath Goes In";
+
+    var breathMsg = "First Breath Goes In";
+
+    if(foam){
+        breathMsg += " And Foam is Coming From the Mouth";
+    }
+
+    header.innerHTML = breathMsg;
 
     while(true){
         event = await waitForEvent(window, 'click');
@@ -300,7 +288,7 @@ async function cprBreathsSuccessful() {
             
         }
         else {
-            gameWarning.innerHTML ='HINT: Place the mask on the individual';
+            gameWarning.innerHTML ='HINT: Can we breath through foam?';
             gameWarning.style.display = 'block';
         }
     }
@@ -313,7 +301,24 @@ async function cprBreathsSuccessful() {
 
 }
 
+async function emsArrivesDuringCpr() {
 
+    await setTimeout(async () => {
+
+        count = 30;
+
+        header.innerHTML = "EMS has arrived and taken over"
+        
+        await waitForCorrectButton('hands-off', 'HINT: You are done :)');
+
+        header.innerHTML = "Well Done! Training Over!"
+
+
+    }, 5000)
+
+
+
+}
 
 function resetCPRTimes() {
     lastTimes = [550, 550, 550, 550, 550];
@@ -401,6 +406,7 @@ window.addEventListener('mousemove', (event) => {
 
 
 // Game Setup buttons
+const gameSetup = document.getElementsByClassName('game-setup')[0];
 const trainingButtons = document.getElementById("training-selection-buttons");
 const trainButton = document.getElementById("train");
 const trainHintsButton = document.getElementById("train-hints");
@@ -431,12 +437,59 @@ trainingButtons.addEventListener("click", (event) => {
     clearTrainingButtons();
 
     element.classList.add("selected-div");
-    console.log(element);
 
 })
 
 
+function clearTrainingChoices() {
+    cprTraining.classList.remove("selected-div");
+    arTraining.classList.remove("selected-div");
+    cprObTraining.classList.remove("selected-div");
+    randomTraining.classList.remove("selected-div");
+
+}
+
+trainingChoices.addEventListener("click", (event) => {
+
+    clearTrainingChoices();
+
+    event.target.classList.add("selected-div")
+
+})
 
 
+const startButton = document.getElementById("start-game");
 
+startButton.addEventListener("click", () => {
+
+    if(trainButton.classList.contains("selected-div")){
+        gameWarning.display = "none";
+        hint.display = "none";
+    }
+    else if(learnButton.classList.contains("selected-div")){
+        gameWarning.display = "none";
+        hint.display = "block";
+    }
+    else {
+        gameWarning.display = "block";
+        hint.display = "none";
+    }
+
+    if(cprTraining.classList.contains("selected-div")){
+        training1();
+    } 
+    else if(arTraining.classList.contains("selected-div")){
+        training2();
+    }
+    else if(cprObTraining.classList.contains("selected-div")){
+        training3();
+    }
+    else {
+        trainingRand();
+    }
+
+    gameContainer.style.display = "block";
+    gameSetup.style.display = "none";
+
+})
 
