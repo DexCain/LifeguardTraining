@@ -70,10 +70,6 @@ async function waitForCorrectButton(targetId, errorMessage) {
 // Game Start
 async function startTraining() {
     points = 0;
-
-
-    
-    
     // From here, we have to choose a training path
     training1();
 }
@@ -127,39 +123,9 @@ async function checkThePatient() {
 
     await waitForCorrectButton('consciousness', 'HINT: What if they were sleeping...');
 
-    // while(true){
-    //     event = await waitForEvent(window, 'click');
-    //     if(event.target.classList.contains('event-action')){
-    //         // They chose the right action
-    //         if(event.target.id === 'consciousness'){
-    //             gameWarning.style.display = 'none';
-    //             break;
-    //         }
-    //         else {
-    //             gameWarning.innerHTML ='HINT: What if they were sleeping...';
-    //             gameWarning.style.display = 'block';
-    //         }
-    //     }
-    // }
-
     header.innerHTML = "Patient Doesn't Respond";
 
     await waitForCorrectButton('long-2', 'HINT: Should Anyone Be Unconcious');
-
-    // while(true){
-    //     event = await waitForEvent(window, 'click');
-    //     if(event.target.classList.contains('event-action')){
-    //         // They chose the right action
-    //         if(event.target.id === 'long-2'){
-    //             gameWarning.style.display = 'none';
-    //             break;
-    //         }
-    //         else {
-    //             gameWarning.innerHTML ='HINT: Should Anyone Be Unconcious';
-    //             gameWarning.style.display = 'block';
-    //         }
-    //     }
-    // }
 
     header.innerHTML = "First Responders are on their way"
 
@@ -169,21 +135,7 @@ async function checkTheCaroArtery(cond) {
     var event = null;
 
     await waitForCorrectButton('carotid', 'HINT: What are their vitals?');
-    // while(true){
-    //     event = await waitForEvent(window, 'click');
-    //     if(event.target.classList.contains('event-action')){
-    //         // They chose the right action
-    //         if(event.target.id === 'carotid'){
-    //             gameWarning.style.display = 'none';
-    //             break;
-                
-    //         }
-    //         else {
-    //             gameWarning.innerHTML ='HINT: What are their vitals?';
-    //             gameWarning.style.display = 'block';
-    //         }
-    //     }
-    // }
+
     if (cond === "cpr"){
         header.innerHTML = "You Don't Feel a Thumping or a Breath";
     }
@@ -200,22 +152,6 @@ async function startCPR(ems) {
     }
 
     await waitForCorrectButton('cpr', 'HINT: They are not alive');
-
-    // while(true){
-    //     event = await waitForEvent(window, 'click');
-    //     if(event.target.classList.contains('event-action')){
-    //         // They chose the right action
-    //         if(event.target.id === 'cpr'){
-    //             gameWarning.style.display = 'none';
-    //             break;
-                
-    //         }
-    //         else {
-    //             gameWarning.innerHTML ='HINT: They are not alive';
-    //             gameWarning.style.display = 'block';
-    //         }
-    //     }
-    // }
 
 
 
