@@ -398,3 +398,45 @@ const updateCursorPosition = (event) => {
 window.addEventListener('mousemove', (event) => {
   updateCursorPosition(event)
 })
+
+
+// Game Setup buttons
+const trainingButtons = document.getElementById("training-selection-buttons");
+const trainButton = document.getElementById("train");
+const trainHintsButton = document.getElementById("train-hints");
+const learnButton = document.getElementById("learn");
+
+const trainingChoices = document.getElementById("training-choice");
+const cprTraining = document.getElementById("cpr-training");
+const arTraining = document.getElementById("ar-training");
+const cprObTraining = document.getElementById("cpr-ob-training");
+const randomTraining = document.getElementById("random-training");
+
+
+function clearTrainingButtons() {
+
+    trainButton.classList.remove("selected-div");
+    trainHintsButton.classList.remove("selected-div");
+    learnButton.classList.remove("selected-div");
+
+}
+
+trainingButtons.addEventListener("click", (event) => {
+
+    var element = event.target;
+    if(element.tagName === "SPAN"){
+        element = element.parentElement;
+    }
+
+    clearTrainingButtons();
+
+    element.classList.add("selected-div");
+    console.log(element);
+
+})
+
+
+
+
+
+

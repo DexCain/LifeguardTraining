@@ -84,33 +84,43 @@
 
             <aside class="game-setup">
 
-                <h3>Choose the mode</h3>
+                <h3>Choose the Mode</h3>
                 
-                <input name="training-learning" id="training-choice" type="radio" checked/>
-                <label for="training-choice">Training Mode<span>No Help, No Hints</span></label>
+                <div class="button-training-container" id="training-selection-buttons">
+                    <div id="train" class="select-buttons selected-div">
+                        Training Mode <span>No Help, No Hints</span>
+                    </div>
 
-                <input name="training-learning" id="training-hints-choice" type="radio"/>
-                <label for="training-hints-choice">Training Mode With Hints<span>Hints given for mistakes</span></label>
+                    <div id="train-hints">
+                        Training Mode With Hints <span>Hints given for mistakes</span>
+                    </div>
 
-                <input name="training-learning" id="learning-choice" type="radio"/>
-                <label for="learning-choice">Learning Mode<span>Hints given regardless</span></label>
+                    <div id="learn">
+                        Learning Mode <span>Hints given regardless</span>
+                    </div> 
+                </div>
 
                 <h3>Choose the Training</h3>
                 
-                <input name="training-choice" id="cpr-choice" type="radio" checked/>
-                <label for="cpr-choice">CPR</label>
+                <div class="button-training-container" id="training-choice">
+                    <div id="cpr-training" class="selected-div">
+                        CPR
+                    </div>
 
-                <input name="training-choice" id="ar-choice" type="radio"/>
-                <label for="ar-choice">AR</label>
+                    <div id="ar-training">
+                        AR
+                    </div>
 
-                <input name="training-choice" id="cpr-ob-choice" type="radio"/>
-                <label for="cpr-ob-choice">CPR Obstructed</label>
+                    <div id="cpr-ob-training">
+                        CPR Obstructed
+                    </div>
 
-                <input name="training-choice" id="random-choice" type="radio"/>
-                <label for="random-choice">Surprise Me</label>
+                    <div id="random-training">
+                        Surprise Me
+                    </div>
+                </div>
 
-
-                <button>Start</button>
+                <button><strong>Start</strong></button>
             </aside>
 
 

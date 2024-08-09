@@ -255,3 +255,87 @@ footer h6 {
     color: rgb(255, 255, 255);
     background-color: rgb(255, 80, 61);
 } 
+
+
+
+/* Aside Content (aka start menu) */
+
+.game-setup {
+
+    max-width: 80%;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+
+}
+
+.game-setup h3 {
+
+    display:block;
+    font-size: 2.3em;
+    color: black;
+    background-color: #6beeec79;
+    border: 1px solid black;
+    border-radius: 12px;
+    padding: 0 1em;
+    margin: .7em auto;
+    max-width: 10em;
+    text-align: center;
+
+}
+
+.game-setup .button-training-container {
+    width: fit-content;
+    margin: auto;
+}
+
+.game-setup .button-training-container div {
+    background-color: #ee6b6d4b;
+    border: 1px solid black;
+    margin: .5em auto;
+    min-width: 17em;
+    border-radius: 10px;
+    padding:  .2em .5em;
+    text-align: center;
+    font-size: 1.3em;
+    transition: all .5s;
+
+}
+
+.game-setup .button-training-container div:hover {
+    background-color:#eb7e80ad;
+
+}
+
+.game-setup .button-training-container .selected-div {
+    /* border: 2px solid #6beeeccf; */
+    background-color: #eb7e80;
+}
+
+.game-setup  .button-training-container .selected-div:hover {
+    background-color: #eb7e80;
+}
+
+.game-setup .button-training-container div span {
+    display: block; 
+    width: 100%;
+    text-align: center;
+    font-size: .8em;
+}
+
+.game-setup button {
+
+    background-color: #6beeec56;
+    border-color: none;
+    border-radius: 25px;
+    margin: 1em auto;
+    font-size: 1em;
+    width: 25%;
+    transition: all .5s;
+
+}
+
+.game-setup button:hover {
+    background-color: #6BEEEB;
+
+}
