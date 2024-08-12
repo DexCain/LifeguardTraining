@@ -7,6 +7,8 @@ const customCursor = document.getElementById('sealcursor');
 const hint = document.getElementById('hint');
 const gameContainer = document.getElementsByClassName('game-container')[0];
 const sealEasyActionDiv = document.getElementById('seal-actions');
+const cprContainer = document.getElementById('cpr-quality-container');
+const cprQuality = document.getElementById('cpr-quality-val');
 
 var lastClick = -2;
 let gameHintState;
@@ -57,6 +59,7 @@ async function waitForCorrectButton(targetId, hintMessage, errorMessage) {
         if(event.target.classList.contains('event-action')){
             // They chose the right action
             if(event.target.id === targetId){
+                gameWarning.style.display = "none";
                 gameWarning.innerHTML = "";
                 hint.innerHTML = "";
                 gamePoints += possiblePoints > 0 ? possiblePoints : 0; 
@@ -64,6 +67,7 @@ async function waitForCorrectButton(targetId, hintMessage, errorMessage) {
             }
             else {
                 // Display the Error if we are in the error state
+                gameWarning.style.display = "block";
                 if(gameErrorState){
                     gameWarning.innerHTML = errorMessage;
                 }
@@ -169,6 +173,7 @@ async function startCPR(ems) {
     await waitForCorrectButton('cpr', 'They have no pulse what do we need to do or continue to do' ,'They are not alive');
 
 
+    cprContainer.style.display = "block";
 
     header.innerHTML = "Starting CPR (click on the patient)";
 
@@ -176,13 +181,16 @@ async function startCPR(ems) {
     while( count !== 30){
         await new Promise(r => setTimeout(r, 100));
         if(avg < 500){
-            scoreCard.innerHTML = "Too Fast" + avg;
+            cprQuality.innerHTML = "&#10007; Too Fast";
+            cprQuality.style.backgroundColor = "rgba(255, 0, 0, 0.636)";
         }
         else if(avg > 600){
-            scoreCard.innerHTML = "Too Slow" + avg;
+            cprQuality.innerHTML = "&#10007; Too Slow";
+            cprQuality.style.backgroundColor = "rgba(255, 0, 0, 0.636)";
         }
         else{
-            scoreCard.innerHTML = "Perfect" + avg;
+            cprQuality.innerHTML = "&#10004; Perfect";
+            cprQuality.style.backgroundColor = "rgba(0, 254, 0, 0.682)";
         }
     }
     // CPR is done, so no need to show CPR data anymore
@@ -420,18 +428,30 @@ trainingChoices.addEventListener("click", (event) => {
 
 const startButton = document.getElementById("start-game");
 
+const hintContainer = document.getElementById('hint-val-container');
+const warningContainer = document.getElementById('warning-val-container');
+
+
 startButton.addEventListener("click", () => {
+ 
+    gameWarning.style.display = "none";
 
     if(trainButton.classList.contains("selected-div")){
+        hintContainer.style.display = "none";
+        warningContainer.style.display = "block";
         gameHintState = false;
         gameErrorState = false;
 
     }
     else if(learnButton.classList.contains("selected-div")){
+        hintContainer.style.display = "block";
+        warningContainer.style.display = "block";
         gameHintState = true;
         gameErrorState = false;
     }
     else {
+        hintContainer.style.display = "none";
+        warningContainer.style.display = "block";
         gameHintState = false;
         gameErrorState = true;
     }
@@ -451,6 +471,7 @@ startButton.addEventListener("click", () => {
 
     gameContainer.style.display = "block";
     gameSetup.style.display = "none";
+    cprContainer.style.display = "none";
 
 })
 
