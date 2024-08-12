@@ -127,16 +127,16 @@ async function training1() {
     await checkThePulse("cpr");
     
     // START CPR
-    await startCPR(false);
+    await startCPR('');
 
     await cprBreathsSuccessful(false);
 
-    await startCPR(false);
+    await startCPR('');
 
     await cprBreathsSuccessful(true);
 
 
-    await startCPR(true);
+    await startCPR('ems');
 
 
 
@@ -144,6 +144,7 @@ async function training1() {
 
 }
 
+// Unconscious to AR, Vomits, Continue AR until, they get the pulse back
 async function training2() {
 
     await checkTheScene();
@@ -164,6 +165,146 @@ async function training2() {
     await recoveryPosition(true);
 
 }
+
+// Unconscious to CPR to Obstructed CPR, to CPR, to Signs of Life
+async function training3() {
+    await checkTheScene();
+
+    await checkThePatient();
+
+    await checkThePulse("cpr");
+
+    await startCPR('');
+
+    await cprBreathsObstructed(true, false);
+
+    await startCPR('');
+
+    await examineAirway(false);
+
+    await cprBreathsObstructed(false, false);
+
+    await startCPR('');
+    
+    await examineAirway(true);
+
+    await cprBreathsObstructed(false, true);
+
+    await startCPR('sol');
+
+
+}
+
+
+
+// MOVE DOWN FURTHER LATER
+
+async function cprBreathsObstructed(firstTime, clearAirway) {
+    // used for condition checking later on
+    var event = true;
+    
+    if(firstTime){
+        await waitForCorrectButton('sealeasy', 'We completed our 30 compressions, what is next?', 'What do we do after 30 compressions for CPR');
+    }
+    else{
+        await waitForCorrectButton('sealeasy', 'We completed our 30 compressions and checked the mouth, what is next?', 'What do we do after 30 compressions and checking the mouth for obstructed CPR');
+    }
+
+    // Changing to our custom cursor
+    document.body.style.cursor = "none";
+    customCursor.style.display = "block";
+
+    header.innerHTML = "Give a Breath by tapping the patient";
+
+    hint.innerHTML = "Place the mask on the GID"
+    
+    while(true){
+        event = await waitForEvent(window, 'click');
+        if(event.target == image){
+            gameWarning.style.display = 'none';
+            hint.innerHTML = "";
+            break;
+        }
+        else {
+            gameWarning.style.display = "block";
+            if(gameErrorState){
+                gameWarning.innerHTML = 'Place the mask on the individual';
+            }
+            else{
+                gameWarning.innerHTML = "Wrong Choice!";
+            }
+        }
+    }
+
+    if(clearAirway){
+        header.innerHTML = "First Breath Goes In";
+    }
+    else{
+        header.innerHTML = "First Breath Doesn't Go In";
+    }
+
+    while(true){
+        event = await waitForEvent(window, 'click');
+        if(event.target == image){
+            gameWarning.style.display = 'none';
+            hint.innerHTML = "";
+            break;
+        }
+        else {
+            gameWarning.style.display = "block";
+            if(gameErrorState){
+                gameWarning.innerHTML = 'Place the mask on the individual';
+            }
+            else{
+                gameWarning.innerHTML = "Wrong Choice!";
+            }
+        }
+    }
+
+    document.body.style.cursor = "pointer";
+    customCursor.style.display = "none";
+
+    if(clearAirway){
+        header.innerHTML = "Second Breath Goes In";
+    }
+    else{
+        header.innerHTML = "Second Breath Doesn't Go In";
+    }
+}
+
+
+async function examineAirway(food){
+
+    await waitForCorrectButton('airway', "Before breaths what should we check for anything we might of dislodged", "We need to check if we removed something from the airway");
+
+    if(food){
+        header.innerHTML = "You See Some Food in the GID's Mouth";
+
+        await waitForCorrectButton('pinky', "We should clear the food we now see", "We saw food in the mouth, what should we do");
+
+        header.innerHTML = "All visible food has been removed";
+    }
+    else {
+        header.innerHTML = "You Don't See Any Visible Food in the GID's Mouth"
+    }
+}
+
+async function signsOfLife() {
+    await setTimeout(async () => {
+
+        count = 30;
+
+        header.innerHTML = "The Patient Seems to Have Woken Up!"
+        
+        await waitForCorrectButton('hands-off','The GID is alive, should we continue care' , 'You are done :)');
+
+        header.innerHTML = "Well Done! Training Over!"
+
+
+    }, 10000)
+}
+
+
 
 async function checkTheScene() {
     header.innerHTML = "You Come Across an Unconcious "+ age[0].toUpperCase() + age.slice(1) +" Lying on the Floor";
@@ -228,12 +369,21 @@ async function recoveryPosition(end) {
 
 }
 
-async function startCPR(ems) {
-    if(ems){
-        emsArrivesDuringCpr();
-    }
+async function startCPR(stopReason) {
 
     await waitForCorrectButton('cpr', 'They have no pulse what do we need to do or continue to do' ,'They are not alive');
+
+    // Checks if the end of this function comes from within this function or outside
+    var inFuncStop = true;
+
+    if(stopReason === 'ems'){
+        emsArrivesDuringCpr();
+        inFuncStop = false;
+    }
+    else if(stopReason === 'sol'){
+        signsOfLife();
+        inFuncStop = false;
+    }
 
     cprContainer.style.display = "block";
 
@@ -258,7 +408,7 @@ async function startCPR(ems) {
     // CPR is done, so no need to show CPR data anymore
     cprContainer.style.display = "none";
     // Done with CPR, time to move on to CPR Breaths (however there are different possibilities so that is handled in the specific training function)
-    if(!ems){
+    if(inFuncStop){
         header.innerHTML = "30 Compressions Done";
     }  
 
@@ -655,7 +805,16 @@ startButton.addEventListener("click", () => {
         training3();
     }
     else {
-        trainingRand();
+        var randomVal = Math.floor(Math.random() * 3);
+        if(randomVal === 0){
+            training1();
+        }
+        else if(randomVal === 1){
+            training2();
+        }
+        else{
+            training3();
+        }
     }
 
     cprContainer.style.display = "none";
