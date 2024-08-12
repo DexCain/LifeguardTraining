@@ -15,10 +15,11 @@ const arContainer = document.getElementById('ar-quality-container');
 const arQuality = document.getElementById('ar-quality-val');
 
 
+var age;
+
 
 // Variables required for AR
 var arStatus = false;
-var arAge;
 var arAvg;
 let lastArTimes;
 let arCount;
@@ -100,10 +101,20 @@ async function waitForCorrectButton(targetId, hintMessage, errorMessage) {
 }
 
 // Game Start
-async function startTraining() {
+async function prepTraining() {
     points = 0;
-    // From here, we have to choose a training path
-    training1();
+
+    const rand = Math.floor(Math.random() * 3);
+
+    if(rand == 0){
+        age = "adult";
+    }
+    else if(rand == 1){
+        age = "child";
+    }
+    else {
+        age = "infant"
+    }
 }
 
 // Unconscious to CPR until EMS arrives and takes over (with foam coming from the mouth)
@@ -113,7 +124,7 @@ async function training1() {
 
     await checkThePatient();
 
-    await checkTheCaroArtery("cpr");
+    await checkThePulse("cpr");
     
     // START CPR
     await startCPR(false);
@@ -134,11 +145,28 @@ async function training1() {
 }
 
 async function training2() {
-    startAR("child");
+
+    await checkTheScene();
+
+    await checkThePatient();
+
+    await checkThePulse("ar");
+    
+    // START AR
+    await startAR('none');
+
+    await checkThePulse("ar");
+
+    await startAR('vomit');
+
+    await checkThePulse("recovery");
+
+    await recoveryPosition(true);
+
 }
 
 async function checkTheScene() {
-    header.innerHTML = "You Come Across an Unconcious Patient Lying on the Floor";
+    header.innerHTML = "You Come Across an Unconcious "+ age[0].toUpperCase() + age.slice(1) +" Lying on the Floor";
     var possiblePoints = 3;
     // Doing the analysis
     var event = null;
@@ -166,13 +194,36 @@ async function checkThePatient() {
 
 }
 
-async function checkTheCaroArtery(cond) {
-    var event = null;
+async function checkThePulse(cond) {
+    var checkButton;
+    if(age === "infant"){
+        checkButton = 'brachial';
+    }
+    else{
+        checkButton = 'carotid';
+    }
 
-    await waitForCorrectButton('carotid', 'Is the adult alive or dead?' , 'What are their vitals?');
+    await waitForCorrectButton(checkButton, 
+            "Is the " + age + " alive or dead?", 
+            "Make sure you are checking the correct artery for a " + age + "!");
 
     if (cond === "cpr"){
         header.innerHTML = "You Don't Feel a Thumping or a Breath";
+    }
+    if (cond === "ar"){
+        header.innerHTML = "You Feel a Thumping But DO NOT Feel a Breath";
+    }
+    if (cond === "recovery") {
+        header.innerHTML = "You feel a thumping and you feel a Breath"
+    }
+}
+
+async function recoveryPosition(end) {
+
+    if(end){
+        await waitForCorrectButton('recover', 'what should we do when we have a pulse and breathing', 'What position should we put this person in?');
+
+        header.innerHTML = "Well Done, EMS has Arrived and Taken Over"
     }
 
 }
@@ -323,7 +374,7 @@ async function cprBreathsSuccessful(foam) {
 
 }
 
-async function startAR(age){
+async function startAR(cond){
     
     await waitForCorrectButton('sealeasy', 'They have no breathing but have a pulse, what do we need to do or continue to do' ,'They are not just not breathing');
 
@@ -331,7 +382,6 @@ async function startAR(age){
 
     arContainer.style.display = "block";
     arStatus = true;
-    arAge = age;
 
     let finalCount;
     let lowAvg;
@@ -348,14 +398,43 @@ async function startAR(age){
         highAvg = 3450;
     }
 
-    resetARTimes(age);
+    resetARTimes();
 
     document.body.style.cursor = "none";
 
     customCursor.style.display = "block";
 
+    var vomit = cond === 'vomit';
+
     while(arCount !== finalCount){
         await new Promise(r => setTimeout(r, 100));
+
+        // If we are in the vomit condition, have the patient vomit
+        if(vomit && arCount === 5){
+            // putting AR on hold
+            arStatus = false;
+            document.body.style.cursor = "pointer";
+            customCursor.style.display = "none";
+
+            header.innerHTML = "The GID Begins to Vomit";
+
+            await waitForCorrectButton('recover', 'You want all the vomit out of their mouth and not on you', 'What position helps remove all vomit from ones mouth');
+
+            header.innerHTML = 'Vomit Has Been Cleared...';
+
+            await waitForCorrectButton('sealeasy', 'We should continue what we were doing', 'We want to continue to give breaths');
+
+            header.innerHTML = 'Continuing AR';
+
+            document.body.style.cursor = "none";
+            customCursor.style.display = "block";
+
+            arStatus = true;
+
+            // prevents automatically returning into this if
+            vomit = false;
+        }
+
         if(arAvg < lowAvg){
             arQuality.innerHTML = "&#10007; Too Fast";
             arQuality.style.backgroundColor = "rgba(255, 0, 0, 0.636)";
@@ -384,7 +463,7 @@ async function startAR(age){
 }
 
 
-function resetARTimes(age) {
+function resetARTimes() {
     if(age === "adult"){
         lastArTimes = [6000, 6000, 6000];
         arAvg = 6000;
@@ -429,7 +508,7 @@ async function emsArrivesDuringCpr() {
 
         count = 30;
 
-        header.innerHTML = "EMS has arrived and taken over"
+        header.innerHTML = "EMS has arrived and wants to take over"
         
         await waitForCorrectButton('hands-off','The professionals have arrived and we are done, what do we do?' , 'You are done :)');
 
@@ -563,6 +642,8 @@ startButton.addEventListener("click", () => {
         gameHintState = false;
         gameErrorState = true;
     }
+
+    prepTraining();
 
     if(cprTraining.classList.contains("selected-div")){
         training1();
