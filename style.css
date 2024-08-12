@@ -368,7 +368,8 @@ footer h6 {
     border-radius:  10px;
 }
 
-#cpr-quality-val {
+#cpr-quality-val,
+#ar-quality-val {
     background-color: rgba(0, 254, 0, 0.682);
     border-radius: 12px;
     padding: .2em .3em;

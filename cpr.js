@@ -7,15 +7,31 @@ const customCursor = document.getElementById('sealcursor');
 const hint = document.getElementById('hint');
 const gameContainer = document.getElementsByClassName('game-container')[0];
 const sealEasyActionDiv = document.getElementById('seal-actions');
+
 const cprContainer = document.getElementById('cpr-quality-container');
 const cprQuality = document.getElementById('cpr-quality-val');
 
+const arContainer = document.getElementById('ar-quality-container');
+const arQuality = document.getElementById('ar-quality-val');
+
+
+
+// Variables required for AR
+var arStatus = false;
+var arAge;
+var arAvg;
+let lastArTimes;
+let arCount;
+let lastArClick;
+
+// Vars required for CPR
 var lastClick = -2;
-let gameHintState;
-let gameErrorState;
 let lastTimes;
 let avg;
 let count;
+
+let gameHintState;
+let gameErrorState;
 
 var gamePoints = 0;
 
@@ -42,7 +58,6 @@ async function waitForValue(obj, targetValue) {
         }, 50); // Check every 100 milliseconds (you can adjust the interval)
     });
 }
-
 
 async function waitForCorrectButton(targetId, hintMessage, errorMessage) {
     var possiblePoints = 3;
@@ -84,8 +99,6 @@ async function waitForCorrectButton(targetId, hintMessage, errorMessage) {
 
 }
 
-
-
 // Game Start
 async function startTraining() {
     points = 0;
@@ -120,6 +133,10 @@ async function training1() {
 
 }
 
+async function training2() {
+    startAR("child");
+}
+
 async function checkTheScene() {
     header.innerHTML = "You Come Across an Unconcious Patient Lying on the Floor";
     var possiblePoints = 3;
@@ -135,7 +152,6 @@ async function checkTheScene() {
     header.innerHTML = "You Are Now Safe to Continue";
 
 }
-
 
 async function checkThePatient() {
     var event = null;
@@ -161,17 +177,12 @@ async function checkTheCaroArtery(cond) {
 
 }
 
-
 async function startCPR(ems) {
-    var event = null;
-
-
     if(ems){
         emsArrivesDuringCpr();
     }
 
     await waitForCorrectButton('cpr', 'They have no pulse what do we need to do or continue to do' ,'They are not alive');
-
 
     cprContainer.style.display = "block";
 
@@ -194,14 +205,57 @@ async function startCPR(ems) {
         }
     }
     // CPR is done, so no need to show CPR data anymore
-    scoreCard.innerHTML = "";
-
+    cprContainer.style.display = "none";
     // Done with CPR, time to move on to CPR Breaths (however there are different possibilities so that is handled in the specific training function)
     if(!ems){
         header.innerHTML = "30 Compressions Done";
     }  
 
 }
+
+function resetCPRTimes() {
+    lastTimes = [550, 550, 550, 550, 550];
+    avg = 550;
+    lastClick = (new Date()).getTime();
+    count = 0;
+}
+
+// CPR CLICKING
+image.addEventListener("click", () => {
+
+    
+    // This is the case that prevents the cpr functionality while we are not in cpr mode
+    if(lastClick === -2){
+        return;
+    }
+    // If its the first time that we clicked the button, we need to set its original time otherwise, we find the interval between button presses
+    if(lastClick === -1) {
+        lastClick = (new Date()).getTime();
+        resetCPRTimes();
+        count = 1;
+    }
+    else if(count === 30){
+        // Change the game state as they are over the amount of CPR they should be doing 
+        lastClick = -2;
+    }
+    else{
+        count += 1;
+        // We get the interval between the last time and now, and then we add it to our 5 count array and fix the average
+        var timeNow = (new Date()).getTime();
+
+        let interval = timeNow - lastClick;
+
+        lastClick = timeNow;
+
+        var removed = lastTimes.shift();
+        lastTimes.push(interval);
+
+        // Recalculating the average
+        avg += (interval - removed)/5
+
+    }
+});
+
 
 async function cprBreathsSuccessful(foam) {
     var event = true;
@@ -269,6 +323,106 @@ async function cprBreathsSuccessful(foam) {
 
 }
 
+async function startAR(age){
+    
+    await waitForCorrectButton('sealeasy', 'They have no breathing but have a pulse, what do we need to do or continue to do' ,'They are not just not breathing');
+
+    header.innerHTML = "Starting AR (click on the patient)";
+
+    arContainer.style.display = "block";
+    arStatus = true;
+    arAge = age;
+
+    let finalCount;
+    let lowAvg;
+    let highAvg;
+
+    if(age === "adult"){
+        finalCount = 20;
+        lowAvg = 5550;
+        highAvg = 6450;
+    }
+    else {
+        finalCount = 40;
+        lowAvg = 2550;
+        highAvg = 3450;
+    }
+
+    resetARTimes(age);
+
+    document.body.style.cursor = "none";
+
+    customCursor.style.display = "block";
+
+    while(arCount !== finalCount){
+        await new Promise(r => setTimeout(r, 100));
+        if(arAvg < lowAvg){
+            arQuality.innerHTML = "&#10007; Too Fast";
+            arQuality.style.backgroundColor = "rgba(255, 0, 0, 0.636)";
+        }
+        else if(arAvg > highAvg){
+            arQuality.innerHTML = "&#10007; Too Slow";
+            arQuality.style.backgroundColor = "rgba(255, 0, 0, 0.636)";
+        }
+        else{
+            arQuality.innerHTML = "&#10004; Perfect";
+            arQuality.style.backgroundColor = "rgba(0, 254, 0, 0.682)";
+        }
+        arQuality.innerHTML = arAvg;
+    }
+
+    document.body.style.cursor = "pointer";
+
+    customCursor.style.display = "none";
+
+    arStatus = false;
+    
+    header.innerHTML = "Breaths Done";
+
+    arContainer.style.display = "none";
+
+}
+
+
+function resetARTimes(age) {
+    if(age === "adult"){
+        lastArTimes = [6000, 6000, 6000];
+        arAvg = 6000;
+    } 
+    else {
+        lastArTimes = [3000, 3000, 3000];
+        arAvg = 3000;
+    }
+    
+    lastArClick = -1;
+    arCount = 0;
+}
+
+// Watching and tracking ar breaths
+image.addEventListener("click", () => {
+
+    // Ensuring that we are in Ar Event and then determining the timing by age of GID
+    if(arStatus){
+        if(lastArClick === -1){
+            lastArClick = (new Date()).getTime();
+            arCount = 1;
+        }
+        else{
+            arCount += 1;
+            var timeNow = (new Date()).getTime();
+
+            let interval = timeNow - lastArClick;
+
+            lastArClick = timeNow;
+
+            var removed = lastArTimes.shift();
+            lastArTimes.push(interval);
+
+            arAvg += (interval - removed)/3;
+        }
+    }
+});
+
 async function emsArrivesDuringCpr() {
 
     await setTimeout(async () => {
@@ -288,52 +442,8 @@ async function emsArrivesDuringCpr() {
 
 }
 
-function resetCPRTimes() {
-    lastTimes = [550, 550, 550, 550, 550];
-    avg = 550;
-    lastClick = (new Date()).getTime();
-    count = 0;
-}
-
-// sealEasyActionDiv.addEventListener("click", () => {
-// })
 
 
-// CPR CLICKING
-image.addEventListener("click", () => {
-
-    
-    // This is the case that prevents the cpr functionality while we are not in cpr mode
-    if(lastClick === -2){
-        return;
-    }
-    // If its the first time that we clicked the button, we need to set its original time otherwise, we find the interval between button presses
-    if(lastClick === -1) {
-        lastClick = (new Date()).getTime();
-        resetCPRTimes();
-        count = 1;
-    }
-    else if(count === 30){
-        // Change the game state as they are over the amount of CPR they should be doing 
-        lastClick = -2;
-    }
-    else{
-        count += 1;
-        // We get the interval between the last time and now, and then we add it to our 5 count array and fix the average
-        var timeNow = (new Date()).getTime();
-
-        let interval = timeNow - lastClick;
-
-        lastClick = timeNow;
-
-        var removed = lastTimes.shift();
-        lastTimes.push(interval);
-
-        // Recalculating the average
-        avg += (interval - removed)/5
-
-    }
-});
 
 
 // Actions Reactive elements
@@ -362,7 +472,6 @@ function resetDropdowns(){
     analysis.style.display = "none";
     patient.style.display = "none";
 }
-
 
 const updateCursorPosition = (event) => {
   customCursor.style.top = `${event.clientY}px`;
@@ -407,7 +516,6 @@ trainingButtons.addEventListener("click", (event) => {
     element.classList.add("selected-div");
 
 })
-
 
 function clearTrainingChoices() {
     cprTraining.classList.remove("selected-div");
@@ -469,9 +577,11 @@ startButton.addEventListener("click", () => {
         trainingRand();
     }
 
+    cprContainer.style.display = "none";
+    arContainer.style.display = "none";
     gameContainer.style.display = "block";
     gameSetup.style.display = "none";
-    cprContainer.style.display = "none";
+
 
 })
 
