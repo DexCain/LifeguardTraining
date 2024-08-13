@@ -149,9 +149,11 @@ footer h6 {
                 "supplies img info";
 }
 
+
 #game-header {
     grid-area: header;
     text-align: center;
+    font-size: 1.5em;
 }
 
 #supplies {
@@ -265,7 +267,7 @@ footer h6 {
 
 .game-setup {
 
-    max-width: 80%;
+    max-width: 95%;
     margin: auto;
     display: flex;
     flex-direction: column;
@@ -374,4 +376,123 @@ footer h6 {
     border-radius: 12px;
     padding: .2em .3em;
 
+}
+
+
+#reset-button{
+    margin-top: .5em;
+    padding: .2em, .5em;
+
+    box-shadow: none;
+
+    background-color: rgba(255, 0, 0, 0.322);
+    border: none;
+    border-bottom: 2px solid red;
+    border-right: 2px solid red;
+    border-radius: 12px;
+}
+
+#reset-button:hover {
+    border:none;
+
+}
+
+
+
+/* Media Queries */
+
+@media(max-width: 1030px){
+    .training-grid-container{
+        width: 90%;
+        grid-template-columns: 1fr 1.2fr;
+        grid-column-gap: 4%;
+        grid-template-areas:
+                    "info info"
+                    "header header"
+                    "supplies img";
+    }
+    nav {
+        width: 90%;
+    }
+    #game-img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .grid-container{
+        margin: 0 auto;
+        width: 80%;
+        display: flex;
+        flex-direction: column;
+    }
+
+}
+
+@media(max-width: 720px){
+    .banner{
+        font-size: 1.7em;
+    }
+    .nav-item{
+        font-size: 1.2em;
+    }
+    #game-instructions{
+        font-size: .9em;
+    }
+    #score-container {
+        font-size: .8em;
+    }
+}
+
+@media(max-width: 684px){
+    .training-grid-container{
+        grid-template-columns: 1fr;
+        grid-template-areas:
+                    "info"
+                    "header"
+                    "img"
+                    "supplies";
+    }
+
+    #score-container{
+        margin-bottom: 0;
+        padding-bottom: 0;
+        width: 90%;
+    }
+    #supplies{
+        margin-bottom: 10px;
+        width: 90%;
+    }
+    #game-img {
+        max-width: 70%;
+        height: auto;
+        margin: .5em auto;
+    }
+}
+
+@media(max-width: 610px){
+    #game-header{
+        font-size: 1.4em;
+    }
+    
+    .banner{
+        font-size: 1.4em;
+    }
+    .nav-item{
+        font-size: 1em;
+    }
+
+    
+    .about-head {
+        font-size: .8em;
+    }
+
+    .game-setup {
+        font-size: .8em;
+    }
+}
+
+@media(max-width: 520px){
+    .banner{
+        font-size: 1.2em;
+    }
 }

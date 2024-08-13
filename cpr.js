@@ -294,14 +294,14 @@ async function signsOfLife() {
 
         count = 30;
 
-        header.innerHTML = "The Patient Seems to Have Woken Up!"
+        header.innerHTML = "The Patient Seems to Have Woken Up!";
         
         await waitForCorrectButton('hands-off','The GID is alive, should we continue care' , 'You are done :)');
 
-        header.innerHTML = "Well Done! Training Over!"
+        header.innerHTML = "Well Done! Training Over!";
 
 
-    }, 10000)
+    }, 10000);
 }
 
 
