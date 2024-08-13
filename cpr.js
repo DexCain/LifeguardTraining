@@ -127,16 +127,16 @@ async function training1() {
     await checkThePulse("cpr");
     
     // START CPR
-    await startCPR('');
+    await startCPR('', false);
 
     await cprBreathsSuccessful(false);
 
-    await startCPR('');
+    await startCPR('', false);
 
     await cprBreathsSuccessful(true);
 
 
-    await startCPR('ems');
+    await startCPR('ems', false);
 
 
 
@@ -174,23 +174,23 @@ async function training3() {
 
     await checkThePulse("cpr");
 
-    await startCPR('');
+    await startCPR('', false);
 
     await cprBreathsObstructed(true, false);
 
-    await startCPR('');
+    await startCPR('', true);
 
     await examineAirway(false);
 
     await cprBreathsObstructed(false, false);
 
-    await startCPR('');
+    await startCPR('', true);
     
     await examineAirway(true);
 
     await cprBreathsObstructed(false, true);
 
-    await startCPR('sol');
+    await startCPR('sol', false);
 
 
 }
@@ -214,7 +214,7 @@ async function cprBreathsObstructed(firstTime, clearAirway) {
     document.body.style.cursor = "none";
     customCursor.style.display = "block";
 
-    header.innerHTML = "Give a Breath by tapping the patient";
+    header.innerHTML = "Give a Breath by Tapping the Patient";
 
     hint.innerHTML = "Place the mask on the GID"
     
@@ -369,7 +369,7 @@ async function recoveryPosition(end) {
 
 }
 
-async function startCPR(stopReason) {
+async function startCPR(stopReason, obstructedAirway) {
 
     await waitForCorrectButton('cpr', 'They have no pulse what do we need to do or continue to do' ,'They are not alive');
 
@@ -387,7 +387,13 @@ async function startCPR(stopReason) {
 
     cprContainer.style.display = "block";
 
-    header.innerHTML = "Starting CPR (click on the patient)";
+    if(obstructedAirway){
+        header.innerHTML = "Starting CPR for Obstructed (click on the patient)";
+    } 
+    else{
+        header.innerHTML = "Starting CPR (click on the patient)";
+
+    }
 
     resetCPRTimes();
     while( count !== 30){
@@ -415,7 +421,7 @@ async function startCPR(stopReason) {
 }
 
 function resetCPRTimes() {
-    lastTimes = [550, 550, 550, 550, 550];
+    lastTimes = [550, 550, 550];
     avg = 550;
     lastClick = (new Date()).getTime();
     count = 0;
@@ -452,7 +458,7 @@ image.addEventListener("click", () => {
         lastTimes.push(interval);
 
         // Recalculating the average
-        avg += (interval - removed)/5
+        avg += (interval - removed)/3
 
     }
 });
@@ -510,7 +516,7 @@ async function cprBreathsSuccessful(foam) {
         }
         else {
             if(gameErrorState){
-                gameWarning.innerHTML ='Can we breath through foam?';
+                gameWarning.innerHTML = "Don't we just give another breath?";
             }
             gameWarning.style.display = 'block';
         }
@@ -528,7 +534,7 @@ async function startAR(cond){
     
     await waitForCorrectButton('sealeasy', 'They have no breathing but have a pulse, what do we need to do or continue to do' ,'They are not just not breathing');
 
-    header.innerHTML = "Starting AR (click on the patient)";
+    header.innerHTML = "Starting AR on the " + age[0].toUpperCase() + age.slice(1) + " (click on the patient)";
 
     arContainer.style.display = "block";
     arStatus = true;
