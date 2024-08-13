@@ -597,7 +597,6 @@ async function startAR(cond){
             arQuality.innerHTML = "&#10004; Perfect";
             arQuality.style.backgroundColor = "rgba(0, 254, 0, 0.682)";
         }
-        arQuality.innerHTML = arAvg;
     }
 
     document.body.style.cursor = "pointer";
